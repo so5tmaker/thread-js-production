@@ -30,14 +30,22 @@ class Post {
       postId
     );
 
+    const updation = value => (value ? [-1, 0] : [1, -1]);
+    const getCounts = () => {
+      const counts = reaction ? updation(reaction.isLike === isLike) : [1, 0];
+      return isLike ? counts : counts.reverse();
+    };
+
     const result = reaction
       ? await updateOrDelete(reaction)
       : await this._postReactionRepository.create({ userId, postId, isLike });
 
+    const [likeCount, dislikeCount] = getCounts();
+
     // the result is an integer when an entity is deleted
     return Number.isInteger(result)
-      ? {}
-      : this._postReactionRepository.getPostReaction(userId, postId);
+      ? { likeCount, dislikeCount }
+      : { ...this._postReactionRepository.getPostReaction(userId, postId), likeCount, dislikeCount };
   }
 }
 

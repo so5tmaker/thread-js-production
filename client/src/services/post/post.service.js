@@ -35,7 +35,7 @@ class Post {
     });
   }
 
-  likePost(postId) {
+  likePost(postId, isLike) {
     return this._http.load(
       `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.REACT}`,
       {
@@ -43,7 +43,7 @@ class Post {
         contentType: ContentType.JSON,
         payload: JSON.stringify({
           postId,
-          isLike: true
+          isLike
         })
       }
     );
