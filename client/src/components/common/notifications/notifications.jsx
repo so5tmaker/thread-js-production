@@ -22,6 +22,9 @@ const Notifications = ({ user, onPostApply }) => {
     socket.on(SocketEvent.LIKE, () => {
       NotificationManager.info(NotificationMessage.LIKED_POST);
     });
+    socket.on(SocketEvent.DISLIKE, () => {
+      NotificationManager.info(NotificationMessage.DISLIKED_POST);
+    });
     socket.on(SocketEvent.NEW_POST, post => {
       if (post.userId !== id) {
         onPostApply(post.id);

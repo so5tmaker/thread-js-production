@@ -45,7 +45,7 @@ class Post {
     // the result is an integer when an entity is deleted
     return Number.isInteger(result)
       ? { likeCount, dislikeCount }
-      : { ...this._postReactionRepository.getPostReaction(userId, postId), likeCount, dislikeCount };
+      : { ...await this._postReactionRepository.getPostReaction(userId, postId), likeCount, dislikeCount };
   }
 }
 
