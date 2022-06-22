@@ -1,12 +1,17 @@
 import PropTypes from 'prop-types';
 import { useCallback, useState, useAppForm } from 'hooks/hooks.js';
-import { ButtonColor, ButtonType, IconName, PostPayloadKey } from 'common/enums/enums.js';
+import {
+  ButtonColor,
+  ButtonType,
+  IconName,
+  PostPayloadKey
+} from 'common/enums/enums.js';
 import { Button, Image, Input, Segment } from 'components/common/common.js';
 import { DEFAULT_ADD_POST_PAYLOAD } from './common/constants.js';
 
 import styles from './styles.module.scss';
 
-const AddPost = ({ onPostAdd, onUploadImage }) => {
+const AddPost = ({ onPostAdd, onUploadImage, bodyValue }) => {
   const [image, setImage] = useState(undefined);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -51,10 +56,15 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
           placeholder="What is the news?"
           rows={5}
           control={control}
+          bodyValue={bodyValue}
         />
         {image?.imageLink && (
           <div className={styles.imageWrapper}>
-            <Image className={styles.image} src={image?.imageLink} alt="post image" />
+            <Image
+              className={styles.image}
+              src={image?.imageLink}
+              alt="post image"
+            />
           </div>
         )}
         <div className={styles.btnWrapper}>
@@ -65,7 +75,7 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
             iconName={IconName.IMAGE}
           >
             <label className={styles.btnImgLabel}>
-              Attach image
+              {bodyValue ? 'Change image' : 'Attach image'}
               <input
                 name="image"
                 type="file"
@@ -75,7 +85,7 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
             </label>
           </Button>
           <Button color={ButtonColor.BLUE} type={ButtonType.SUBMIT}>
-            Post
+            {bodyValue ? 'Update' : 'Post'}
           </Button>
         </div>
       </form>
@@ -85,7 +95,12 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
 
 AddPost.propTypes = {
   onPostAdd: PropTypes.func.isRequired,
-  onUploadImage: PropTypes.func.isRequired
+  onUploadImage: PropTypes.func.isRequired,
+  bodyValue: PropTypes.string
+};
+
+AddPost.defaultProps = {
+  bodyValue: ''
 };
 
 export { AddPost };

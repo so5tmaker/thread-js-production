@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { threadActionCreator } from 'store/actions.js';
 import { image as imageService } from 'services/services.js';
 import { ThreadToolbarKey, UseFormMode } from 'common/enums/enums.js';
-import { Post, Spinner, Checkbox } from 'components/common/common.js';
+import { Post, Spinner, Checkbox, Segment } from 'components/common/common.js';
 import {
   ExpandedPost,
   SharedPostLink,
@@ -35,6 +35,7 @@ const Thread = () => {
     userId: state.profile.user.id
   }));
   const [sharedPostId, setSharedPostId] = useState(undefined);
+  const [updatedPostId, setUpdatedPostId] = useState(undefined);
 
   const { control, watch } = useAppForm({
     defaultValues: DEFAULT_THREAD_TOOLBAR,
@@ -81,6 +82,11 @@ const Thread = () => {
     [dispatch]
   );
 
+  const handlePostUpdate = useCallback(
+    postPayload => dispatch(threadActionCreator.updatePost(postPayload)),
+    [dispatch]
+  );
+
   const handleMorePostsLoad = useCallback(
     filtersPayload => {
       dispatch(threadActionCreator.loadMorePosts(filtersPayload));
@@ -99,6 +105,12 @@ const Thread = () => {
   const handleUploadImage = file => imageService.uploadImage(file);
 
   const handleCloseSharedPostLink = () => setSharedPostId(undefined);
+
+  const handleUpdatedPost = id => {
+    return setUpdatedPostId(!updatedPostId ? id : undefined);
+  };
+
+  // const handleCloseUpdatedPost = () => setUpdatedPostId(undefined);
 
   useEffect(() => {
     handleGetMorePosts();
@@ -126,14 +138,24 @@ const Thread = () => {
         loader={<Spinner key="0" />}
       >
         {posts.map(post => (
-          <Post
-            post={post}
-            onPostLike={handlePostLike}
-            onPostDisLike={handlePostDisLike}
-            onExpandedPostToggle={handleExpandedPostToggle}
-            onSharePost={handleSharePost}
-            key={post.id}
-          />
+          <Segment key={post.id}>
+            <Post
+              post={post}
+              userId={userId}
+              onPostLike={handlePostLike}
+              onPostDisLike={handlePostDisLike}
+              onExpandedPostToggle={handleExpandedPostToggle}
+              onSharePost={handleSharePost}
+              onEditPost={handleUpdatedPost}
+            />
+            {updatedPostId === post.id && (
+              <AddPost
+                onPostAdd={handlePostUpdate}
+                onUploadImage={handleUploadImage}
+                bodyValue={post.body}
+              />
+            )}
+          </Segment>
         ))}
       </InfiniteScroll>
       {expandedPost && <ExpandedPost onSharePost={handleSharePost} />}

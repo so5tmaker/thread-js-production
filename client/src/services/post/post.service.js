@@ -35,6 +35,15 @@ class Post {
     });
   }
 
+  updatePost(payload) {
+    const { id } = payload;
+    return this._http.load(`${this._apiPath}${ApiPath.POSTS}${PostsApiPath.ROOT}${id}`, {
+      method: HttpMethod.PUT,
+      contentType: ContentType.JSON,
+      payload: JSON.stringify(payload)
+    });
+  }
+
   likePost(postId, isLike) {
     return this._http.load(
       `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.REACT}`,

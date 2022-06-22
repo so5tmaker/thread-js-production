@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useController } from 'react-hook-form';
+import { useState } from 'hooks/hooks.js';
 import { ErrorMessage } from '@hookform/error-message';
 import clsx from 'clsx';
 
@@ -17,15 +18,21 @@ const Input = ({
   disabled,
   iconName,
   placeholder,
-  className
+  className,
+  bodyValue
 }) => {
   const { field } = useController({ name, control });
   const isTextarea = Boolean(rows);
+  const [textValue, setTextArea] = useState(null);
 
   return (
     <div className={styles.inputWrapper}>
       <div className={styles.inputContainer}>
-        {iconName && <span className={styles.icon}><Icon name={iconName} /></span>}
+        {iconName && (
+          <span className={styles.icon}>
+            <Icon name={iconName} />
+          </span>
+        )}
         {isTextarea ? (
           <textarea
             {...field}
@@ -33,6 +40,8 @@ const Input = ({
             rows={rows}
             placeholder={placeholder}
             className={clsx(styles.textArea, className)}
+            control={textValue ? textValue?.target.value : bodyValue}
+            onChange={setTextArea}
           />
         ) : (
           <input
@@ -40,7 +49,11 @@ const Input = ({
             type={type}
             disabled={disabled}
             placeholder={placeholder}
-            className={clsx(styles.input, iconName && styles.withIcon, className)}
+            className={clsx(
+              styles.input,
+              iconName && styles.withIcon,
+              className
+            )}
           />
         )}
       </div>
@@ -48,7 +61,6 @@ const Input = ({
         <ErrorMessage errors={errors} name={name} />
       </span>
     </div>
-
   );
 };
 
@@ -61,7 +73,8 @@ Input.propTypes = {
   placeholder: PropTypes.string.isRequired,
   className: PropTypes.string,
   type: PropTypes.oneOf(['email', 'password', 'submit', 'text']),
-  rows: PropTypes.number
+  rows: PropTypes.number,
+  bodyValue: PropTypes.string
 };
 
 Input.defaultProps = {
@@ -70,7 +83,8 @@ Input.defaultProps = {
   className: '',
   type: 'text',
   rows: 0,
-  errors: {}
+  errors: {},
+  bodyValue: ''
 };
 
 export { Input };

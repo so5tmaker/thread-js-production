@@ -12,7 +12,9 @@ const Post = ({
   onPostLike,
   onPostDisLike,
   onExpandedPostToggle,
-  onSharePost
+  onSharePost,
+  onEditPost,
+  userId
 }) => {
   const {
     id,
@@ -30,6 +32,7 @@ const Post = ({
   const handlePostDisLike = () => onPostDisLike(id);
   const handleExpandedPostToggle = () => onExpandedPostToggle(id);
   const handleSharePost = () => onSharePost(id);
+  const handleEditPost = () => onEditPost(id);
 
   return (
     <div className={styles.card}>
@@ -60,6 +63,9 @@ const Post = ({
           iconName={IconName.SHARE_ALTERNATE}
           onClick={handleSharePost}
         />
+        {user.id === userId && (
+          <IconButton iconName={IconName.EDIT_POST} onClick={handleEditPost} />
+        )}
       </div>
     </div>
   );
@@ -70,7 +76,9 @@ Post.propTypes = {
   onPostLike: PropTypes.func.isRequired,
   onPostDisLike: PropTypes.func.isRequired,
   onExpandedPostToggle: PropTypes.func.isRequired,
-  onSharePost: PropTypes.func.isRequired
+  onSharePost: PropTypes.func.isRequired,
+  onEditPost: PropTypes.func.isRequired,
+  userId: PropTypes.number.isRequired
 };
 
 export { Post };
