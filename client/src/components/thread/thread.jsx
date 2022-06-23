@@ -83,7 +83,10 @@ const Thread = () => {
   );
 
   const handlePostUpdate = useCallback(
-    postPayload => dispatch(threadActionCreator.updatePost(postPayload)),
+    postPayload => {
+      setUpdatedPostId(undefined);
+      return dispatch(threadActionCreator.updatePost(postPayload));
+    },
     [dispatch]
   );
 
@@ -109,8 +112,6 @@ const Thread = () => {
   const handleUpdatedPost = id => {
     return setUpdatedPostId(!updatedPostId ? id : undefined);
   };
-
-  // const handleCloseUpdatedPost = () => setUpdatedPostId(undefined);
 
   useEffect(() => {
     handleGetMorePosts();
@@ -153,6 +154,7 @@ const Thread = () => {
                 onPostAdd={handlePostUpdate}
                 onUploadImage={handleUploadImage}
                 bodyValue={post.body}
+                postId={updatedPostId}
               />
             )}
           </Segment>

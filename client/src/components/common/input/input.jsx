@@ -19,11 +19,18 @@ const Input = ({
   iconName,
   placeholder,
   className,
-  bodyValue
+  bodyValue,
+  onChangeMessage
 }) => {
   const { field } = useController({ name, control });
   const isTextarea = Boolean(rows);
-  const [textValue, setTextArea] = useState(null);
+  const [value, setValue] = useState(field.value + bodyValue);
+
+  const onChangeTextArea = e => {
+    field.onChange(e.target.value);
+    setValue(e.target.value);
+    onChangeMessage('');
+  };
 
   return (
     <div className={styles.inputWrapper}>
@@ -40,8 +47,8 @@ const Input = ({
             rows={rows}
             placeholder={placeholder}
             className={clsx(styles.textArea, className)}
-            control={textValue ? textValue?.target.value : bodyValue}
-            onChange={setTextArea}
+            value={value}
+            onChange={onChangeTextArea}
           />
         ) : (
           <input
@@ -74,7 +81,8 @@ Input.propTypes = {
   className: PropTypes.string,
   type: PropTypes.oneOf(['email', 'password', 'submit', 'text']),
   rows: PropTypes.number,
-  bodyValue: PropTypes.string
+  bodyValue: PropTypes.string,
+  onChangeMessage: PropTypes.func
 };
 
 Input.defaultProps = {
@@ -84,7 +92,8 @@ Input.defaultProps = {
   type: 'text',
   rows: 0,
   errors: {},
-  bodyValue: ''
+  bodyValue: '',
+  onChangeMessage: () => {}
 };
 
 export { Input };

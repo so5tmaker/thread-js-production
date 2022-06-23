@@ -44,17 +44,18 @@ const createPost = createAsyncThunk(
 
 const updatePost = createAsyncThunk(
   ActionType.UPDATE_POST,
-  async (id, { getState, extra: { services } }) => {
+  async ({ id, imageId, imageLink, body }, { getState, extra: { services } }) => {
     const {
       posts: { posts }
     } = getState();
 
-    const post = posts.find(item => item.id === id);
-    const updatedPost = await services.post.updatePost(post);
+    const updatedPost = await services.post.updatePost({ id, imageId, body });
 
     const mapPosts = item => ({
       ...item,
-      body: updatedPost.body
+      image: { ...item.image, id: imageId, link: imageLink },
+      imageId,
+      body
     });
 
     const updated = posts.map(item => (

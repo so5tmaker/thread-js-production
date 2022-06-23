@@ -50,14 +50,6 @@ const reducer = createReducer(initialState, builder => {
       state.expandedPost = expandedPost;
     }
   );
-  // builder.addMatcher(
-  //   isAnyOf(updatePost.fulfilled),
-  //   (state, action) => {
-  //     const { posts } = action.payload;
-
-  //     state.posts = posts;
-  //   }
-  // );
   builder.addMatcher(
     isAnyOf(applyPost.fulfilled, createPost.fulfilled),
     (state, action) => {

@@ -11,9 +11,10 @@ import { DEFAULT_ADD_POST_PAYLOAD } from './common/constants.js';
 
 import styles from './styles.module.scss';
 
-const AddPost = ({ onPostAdd, onUploadImage, bodyValue }) => {
+const AddPost = ({ onPostAdd, onUploadImage, bodyValue, postId }) => {
   const [image, setImage] = useState(undefined);
   const [isUploading, setIsUploading] = useState(false);
+  const [message, setMessage] = useState('');
 
   const { control, handleSubmit, reset } = useAppForm({
     defaultValues: DEFAULT_ADD_POST_PAYLOAD
@@ -22,14 +23,20 @@ const AddPost = ({ onPostAdd, onUploadImage, bodyValue }) => {
   const handleAddPost = useCallback(
     values => {
       if (!values.body) {
+        setMessage('Enter any text in the area above!');
         return;
       }
-      onPostAdd({ imageId: image?.imageId, body: values.body }).then(() => {
+      onPostAdd({
+        imageId: image?.imageId,
+        imageLink: image?.imageLink,
+        body: values.body,
+        id: postId
+      }).then(() => {
         reset();
         setImage(undefined);
       });
     },
-    [image, reset, onPostAdd]
+    [image, reset, onPostAdd, postId]
   );
 
   const handleUploadFile = ({ target }) => {
@@ -57,7 +64,10 @@ const AddPost = ({ onPostAdd, onUploadImage, bodyValue }) => {
           rows={5}
           control={control}
           bodyValue={bodyValue}
+          postId={postId}
+          onChangeMessage={setMessage}
         />
+        <div className={styles.divMessage}>{message}</div>
         {image?.imageLink && (
           <div className={styles.imageWrapper}>
             <Image
@@ -96,11 +106,13 @@ const AddPost = ({ onPostAdd, onUploadImage, bodyValue }) => {
 AddPost.propTypes = {
   onPostAdd: PropTypes.func.isRequired,
   onUploadImage: PropTypes.func.isRequired,
-  bodyValue: PropTypes.string
+  bodyValue: PropTypes.string,
+  postId: PropTypes.number
 };
 
 AddPost.defaultProps = {
-  bodyValue: ''
+  bodyValue: '',
+  postId: 0
 };
 
 export { AddPost };
