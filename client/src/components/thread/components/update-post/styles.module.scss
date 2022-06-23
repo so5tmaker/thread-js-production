@@ -1,0 +1,23 @@
+.imageWrapper {
+  margin-bottom: 10px;
+}
+
+.image {
+  width: auto;
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.btnWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.btnImgLabel {
+  margin: 0 0 0 10px;
+}
+
+.divMessage {
+  margin: 0.1rem 0 1rem;
+  color: red;
+}

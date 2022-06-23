@@ -7,7 +7,8 @@ import {
   addComment,
   applyPost,
   createPost,
-  updatePost
+  updatePost,
+  deletePost
 } from './actions.js';
 
 const initialState = {
@@ -38,6 +39,11 @@ const reducer = createReducer(initialState, builder => {
     state.expandedPost = post;
   });
   builder.addCase(updatePost.fulfilled, (state, action) => {
+    const { posts } = action.payload;
+
+    state.posts = posts;
+  });
+  builder.addCase(deletePost.fulfilled, (state, action) => {
     const { posts } = action.payload;
 
     state.posts = posts;

@@ -14,7 +14,8 @@ import { Post, Spinner, Checkbox, Segment } from 'components/common/common.js';
 import {
   ExpandedPost,
   SharedPostLink,
-  AddPost
+  AddPost,
+  UpdatePost
 } from './components/components.js';
 import { DEFAULT_THREAD_TOOLBAR } from './common/constants.js';
 
@@ -90,6 +91,11 @@ const Thread = () => {
     [dispatch]
   );
 
+  const handlePostDelete = useCallback(
+    id => dispatch(threadActionCreator.deletePost(id)),
+    [dispatch]
+  );
+
   const handleMorePostsLoad = useCallback(
     filtersPayload => {
       dispatch(threadActionCreator.loadMorePosts(filtersPayload));
@@ -148,13 +154,13 @@ const Thread = () => {
               onExpandedPostToggle={handleExpandedPostToggle}
               onSharePost={handleSharePost}
               onEditPost={handleUpdatedPost}
+              onDeletePost={handlePostDelete}
             />
             {updatedPostId === post.id && (
-              <AddPost
-                onPostAdd={handlePostUpdate}
+              <UpdatePost
+                onPostUpdate={handlePostUpdate}
                 onUploadImage={handleUploadImage}
-                bodyValue={post.body}
-                postId={updatedPostId}
+                post={post}
               />
             )}
           </Segment>

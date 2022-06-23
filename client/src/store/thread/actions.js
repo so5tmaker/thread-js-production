@@ -66,6 +66,21 @@ const updatePost = createAsyncThunk(
   }
 );
 
+const deletePost = createAsyncThunk(
+  ActionType.DELETE_POST,
+  async (id, { getState, extra: { services } }) => {
+    const {
+      posts: { posts }
+    } = getState();
+
+    await services.post.deletePost(id);
+
+    const rest = posts.filter(item => item.id !== id);
+
+    return { posts: rest };
+  }
+);
+
 const toggleExpandedPost = createAsyncThunk(
   ActionType.SET_EXPANDED_POST,
   async (postId, { extra: { services } }) => {
@@ -129,6 +144,7 @@ const addComment = createAsyncThunk(
 export {
   loadPosts,
   updatePost,
+  deletePost,
   loadMorePosts,
   applyPost,
   createPost,

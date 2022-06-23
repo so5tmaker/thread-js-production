@@ -19,6 +19,11 @@ const initPost = (fastify, opts, done) => {
     [ControllerHook.HANDLER]: req => postService.updatePostById(req.params.id, req.body)
   });
   fastify.route({
+    method: HttpMethod.DELETE,
+    url: PostsApiPath.$ID,
+    [ControllerHook.HANDLER]: req => postService.deletePostById(req.params.id)
+  });
+  fastify.route({
     method: HttpMethod.POST,
     url: PostsApiPath.ROOT,
     [ControllerHook.HANDLER]: async req => {

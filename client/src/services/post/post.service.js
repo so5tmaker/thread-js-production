@@ -44,6 +44,12 @@ class Post {
     });
   }
 
+  deletePost(id) {
+    return this._http.load(`${this._apiPath}${ApiPath.POSTS}${PostsApiPath.ROOT}${id}`, {
+      method: HttpMethod.DELETE
+    });
+  }
+
   likePost(postId, isLike) {
     return this._http.load(
       `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.REACT}`,

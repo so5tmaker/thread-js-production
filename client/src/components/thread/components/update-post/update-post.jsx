@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useCallback, useState, useAppForm } from 'hooks/hooks.js';
+import { postType } from 'common/prop-types/prop-types';
 import {
   ButtonColor,
   ButtonType,
@@ -7,31 +8,45 @@ import {
   PostPayloadKey
 } from 'common/enums/enums.js';
 import { Button, Image, Input, Segment } from 'components/common/common.js';
-import { DEFAULT_ADD_POST_PAYLOAD } from './common/constants.js';
+import { DEFAULT_UPDATE_POST_PAYLOAD } from './common/constants.js';
 
 import styles from './styles.module.scss';
 
-const AddPost = ({ onPostAdd, onUploadImage }) => {
+const UpdatePost = ({ onPostUpdate, onUploadImage, post }) => {
   const [image, setImage] = useState(undefined);
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
 
   const { control, handleSubmit, reset } = useAppForm({
-    defaultValues: DEFAULT_ADD_POST_PAYLOAD
+    defaultValues: DEFAULT_UPDATE_POST_PAYLOAD
   });
 
-  const handleAddPost = useCallback(
+  const handleUpdatePost = useCallback(
     values => {
-      if (!values.body) {
-        setMessage('Enter any text in the area above!');
+      const {
+        body,
+        image: { id: imageId, link: imageLink }
+      } = post;
+      if (!values.body && !image) {
+        setMessage('You did not change any text in the area above!');
         return;
       }
-      onPostAdd({ imageId: image?.imageId, body: values.body }).then(() => {
+      const imageOptions = {
+        ...image,
+        id: post.id
+      };
+
+      const updateOptions = { ...imageOptions, imageId, imageLink };
+      const options = image ? imageOptions : updateOptions;
+      onPostUpdate({
+        ...options,
+        body: values.body ? values.body : body
+      }).then(() => {
         reset();
         setImage(undefined);
       });
     },
-    [image, reset, onPostAdd]
+    [image, reset, onPostUpdate]
   );
 
   const handleUploadFile = ({ target }) => {
@@ -52,12 +67,13 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
 
   return (
     <Segment>
-      <form onSubmit={handleSubmit(handleAddPost)}>
+      <form onSubmit={handleSubmit(handleUpdatePost)}>
         <Input
           name={PostPayloadKey.BODY}
-          placeholder="What is the news?"
           rows={5}
           control={control}
+          bodyValue={post.body}
+          postId={post.id}
           onChangeMessage={setMessage}
         />
         <div className={styles.divMessage}>{message}</div>
@@ -78,7 +94,7 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
             iconName={IconName.IMAGE}
           >
             <label className={styles.btnImgLabel}>
-              Attach image
+              Change image
               <input
                 name="image"
                 type="file"
@@ -88,7 +104,7 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
             </label>
           </Button>
           <Button color={ButtonColor.BLUE} type={ButtonType.SUBMIT}>
-            Post
+            Update
           </Button>
         </div>
       </form>
@@ -96,9 +112,10 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
   );
 };
 
-AddPost.propTypes = {
-  onPostAdd: PropTypes.func.isRequired,
-  onUploadImage: PropTypes.func.isRequired
+UpdatePost.propTypes = {
+  onPostUpdate: PropTypes.func.isRequired,
+  onUploadImage: PropTypes.func.isRequired,
+  post: postType.isRequired
 };
 
-export { AddPost };
+export { UpdatePost };

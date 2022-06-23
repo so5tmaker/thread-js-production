@@ -23,6 +23,10 @@ class Post {
     return this._postRepository.updateById(id, { imageId, body });
   }
 
+  async deletePostById(id) {
+    return this._postRepository.deleteById(id);
+  }
+
   async setReaction(userId, { postId, isLike = true }) {
     // define the callback for future use as a promise
     const updateOrDelete = react => (react.isLike === isLike
