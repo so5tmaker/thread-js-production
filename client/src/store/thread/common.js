@@ -6,7 +6,8 @@ const ActionType = {
   SET_ALL_POSTS: 'thread/set-all-posts',
   SET_EXPANDED_POST: 'thread/set-expanded-post',
   REACT: 'thread/react',
-  COMMENT: 'thread/comment'
+  COMMENT: 'thread/comment',
+  UPDATE_COMMENT: 'thread/update-comment'
 };
 
 export { ActionType };

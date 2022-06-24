@@ -13,6 +13,11 @@ const initComment = (fastify, opts, done) => {
     url: CommentsApiPath.ROOT,
     [ControllerHook.HANDLER]: async req => commentService.create(req.user.id, req.body)
   });
+  fastify.route({
+    method: HttpMethod.PUT,
+    url: CommentsApiPath.$ID,
+    [ControllerHook.HANDLER]: async req => commentService.updateCommentById(req.user.id, req.body)
+  });
 
   done();
 };

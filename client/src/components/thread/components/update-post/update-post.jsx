@@ -28,7 +28,7 @@ const UpdatePost = ({ onPostUpdate, onUploadImage, post }) => {
         image: { id: imageId, link: imageLink }
       } = post;
       if (!values.body && !image) {
-        setMessage('You did not change any text in the area above!');
+        setMessage('You did not change text in the area above!');
         return;
       }
       const imageOptions = {
@@ -70,10 +70,10 @@ const UpdatePost = ({ onPostUpdate, onUploadImage, post }) => {
       <form onSubmit={handleSubmit(handleUpdatePost)}>
         <Input
           name={PostPayloadKey.BODY}
+          placeholder="What is the news?"
           rows={5}
           control={control}
           bodyValue={post.body}
-          postId={post.id}
           onChangeMessage={setMessage}
         />
         <div className={styles.divMessage}>{message}</div>

@@ -166,7 +166,9 @@ const Thread = () => {
           </Segment>
         ))}
       </InfiniteScroll>
-      {expandedPost && <ExpandedPost onSharePost={handleSharePost} />}
+      {expandedPost && (
+        <ExpandedPost onSharePost={handleSharePost} userId={userId} />
+      )}
       {sharedPostId && (
         <SharedPostLink
           postId={sharedPostId}

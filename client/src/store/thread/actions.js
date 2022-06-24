@@ -141,6 +141,31 @@ const addComment = createAsyncThunk(
   }
 );
 
+const updateComment = createAsyncThunk(
+  ActionType.UPDATE_COMMENT,
+  async ({ id, body, postId }, { getState, extra: { services } }) => {
+    const updatedComment = await services.comment.updateComment({ id, body });
+
+    const mapComments = comment => ({
+      ...comment,
+      body // comment is taken from the current closure
+    });
+    const updatedComments = comments => comments.map(comment => (
+      comment.id !== updatedComment.id ? comment : mapComments(comment)
+    ));
+
+    const {
+      posts: { posts }
+    } = getState();
+
+    const updated = posts.map(post => (
+      post.id !== postId ? post : updatedComments(post.comments)
+    ));
+
+    return { posts: updated };
+  }
+);
+
 export {
   loadPosts,
   updatePost,
@@ -150,5 +175,6 @@ export {
   createPost,
   toggleExpandedPost,
   likePost,
-  addComment
+  addComment,
+  updateComment
 };

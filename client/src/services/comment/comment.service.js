@@ -27,6 +27,18 @@ class Comment {
       payload: JSON.stringify(payload)
     });
   }
+
+  updateComment(payload) {
+    const { id } = payload;
+    return this._http.load(
+      `${this._apiPath}${ApiPath.COMMENTS}${CommentsApiPath.ROOT}${id}`,
+      {
+        method: HttpMethod.PUT,
+        contentType: ContentType.JSON,
+        payload: JSON.stringify(payload)
+      }
+    );
+  }
 }
 
 export { Comment };
