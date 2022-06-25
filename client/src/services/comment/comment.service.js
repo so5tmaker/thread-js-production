@@ -39,6 +39,15 @@ class Comment {
       }
     );
   }
+
+  deleteComment(id) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.COMMENTS}${CommentsApiPath.ROOT}${id}`,
+      {
+        method: HttpMethod.DELETE
+      }
+    );
+  }
 }
 
 export { Comment };

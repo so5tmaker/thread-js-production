@@ -17,6 +17,10 @@ class Comment {
   async updateCommentById(id, { body }) {
     return this._commentRepository.updateById(id, { body });
   }
+
+  async deleteCommentById(id) {
+    return this._commentRepository.deleteById(id);
+  }
 }
 
 export { Comment };

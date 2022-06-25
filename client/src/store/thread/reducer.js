@@ -9,7 +9,8 @@ import {
   createPost,
   updatePost,
   deletePost,
-  updateComment
+  updateComment,
+  deleteComment
 } from './actions.js';
 
 const initialState = {
@@ -41,12 +42,10 @@ const reducer = createReducer(initialState, builder => {
   });
   builder.addCase(updatePost.fulfilled, (state, action) => {
     const { posts } = action.payload;
-
     state.posts = posts;
   });
   builder.addCase(deletePost.fulfilled, (state, action) => {
     const { posts } = action.payload;
-
     state.posts = posts;
   });
   builder.addCase(
@@ -57,8 +56,16 @@ const reducer = createReducer(initialState, builder => {
       state.expandedPost = expandedPost;
     }
   );
+  builder.addCase(
+    deleteComment.fulfilled,
+    (state, action) => {
+      const { posts, expandedPost } = action.payload;
+      state.posts = posts;
+      state.expandedPost = expandedPost;
+    }
+  );
   builder.addMatcher(
-    isAnyOf(likePost.fulfilled, addComment.fulfilled, updateComment.fulfilled),
+    isAnyOf(likePost.fulfilled, addComment.fulfilled),
     (state, action) => {
       const { posts, expandedPost } = action.payload;
       state.posts = posts;

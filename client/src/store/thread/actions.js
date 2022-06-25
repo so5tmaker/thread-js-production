@@ -164,6 +164,32 @@ const updateComment = createAsyncThunk(
   }
 );
 
+const deleteComment = createAsyncThunk(
+  ActionType.DELETE_COMMENT,
+  async (id, { getState, extra: { services } }) => {
+    const comment = await services.comment.getComment(id);
+    await services.comment.deleteComment(id);
+
+    const {
+      posts: { posts, expandedPost }
+    } = getState();
+
+    const mapComments = post => ({
+      ...post,
+      commentCount: Number(post.commentCount) - 1,
+      comments: expandedPost.comments.filter(item => item.id !== id) // comment is taken from the current closure
+    });
+
+    const updated = posts.map(post => (
+      post.id !== comment.postId ? post : mapComments(post)
+    ));
+
+    const updatedExpandedPost = mapComments(expandedPost);
+
+    return { posts: updated, expandedPost: updatedExpandedPost };
+  }
+);
+
 export {
   loadPosts,
   updatePost,
@@ -174,5 +200,6 @@ export {
   toggleExpandedPost,
   likePost,
   addComment,
-  updateComment
+  updateComment,
+  deleteComment
 };

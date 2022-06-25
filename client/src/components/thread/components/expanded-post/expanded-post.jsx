@@ -44,6 +44,11 @@ const ExpandedPost = ({ onSharePost, userId }) => {
     [dispatch]
   );
 
+  const handleCommentDelete = useCallback(
+    id => dispatch(threadActionCreator.deleteComment(id)),
+    [dispatch]
+  );
+
   const handleExpandedPostToggle = useCallback(
     id => dispatch(threadActionCreator.toggleExpandedPost(id)),
     [dispatch]
@@ -76,6 +81,7 @@ const ExpandedPost = ({ onSharePost, userId }) => {
                 comment={comment}
                 userId={userId}
                 onFormClose={handleUpdateFormClose}
+                onCommentDelete={handleCommentDelete}
               />
             ))}
             {!updatedComment && (

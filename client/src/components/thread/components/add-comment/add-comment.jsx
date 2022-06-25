@@ -1,4 +1,3 @@
-
 import PropTypes from 'prop-types';
 import { useAppForm, useCallback } from 'hooks/hooks.js';
 import { ButtonType, CommentPayloadKey } from 'common/enums/enums.js';

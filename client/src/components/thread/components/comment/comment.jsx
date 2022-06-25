@@ -10,7 +10,8 @@ import styles from './styles.module.scss';
 const Comment = ({
   comment: { id, body, createdAt, user },
   userId,
-  onFormClose
+  onFormClose,
+  onCommentDelete
 }) => (
   <div className={styles.comment}>
     <div>
@@ -24,9 +25,17 @@ const Comment = ({
       <div>
         <span className={styles.author}>{user.username}</span>
         <span className={styles.date}>{getFromNowTime(createdAt)}</span>
-        <span className={styles.icon} onClick={() => onFormClose({ id, body })}>
-          {userId === user.id && <Icon name={IconName.EDIT_POST} />}
-        </span>
+
+        {userId === user.id && (
+          <>
+            <span onClick={() => onFormClose({ id, body })}>
+              <Icon className={styles.icon} name={IconName.EDIT_POST} />
+            </span>
+            <span onClick={() => onCommentDelete(id)}>
+              <Icon className={styles.icon} name={IconName.DELETE_POST} />
+            </span>
+          </>
+        )}
       </div>
       <p>{body}</p>
     </div>
@@ -36,7 +45,8 @@ const Comment = ({
 Comment.propTypes = {
   comment: commentType.isRequired,
   userId: PropTypes.isRequired,
-  onFormClose: PropTypes.func.isRequired
+  onFormClose: PropTypes.func.isRequired,
+  onCommentDelete: PropTypes.func.isRequired
 };
 
 export { Comment };

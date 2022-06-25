@@ -16,7 +16,13 @@ const initComment = (fastify, opts, done) => {
   fastify.route({
     method: HttpMethod.PUT,
     url: CommentsApiPath.$ID,
-    [ControllerHook.HANDLER]: async req => commentService.updateCommentById(req.params.id, req.body)
+    [ControllerHook.HANDLER]: req => commentService.updateCommentById(req.params.id, req.body)
+  });
+
+  fastify.route({
+    method: HttpMethod.DELETE,
+    url: CommentsApiPath.$ID,
+    [ControllerHook.HANDLER]: req => commentService.deleteCommentById(req.params.id)
   });
 
   done();
