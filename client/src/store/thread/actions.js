@@ -143,7 +143,7 @@ const addComment = createAsyncThunk(
 
 const updateComment = createAsyncThunk(
   ActionType.UPDATE_COMMENT,
-  async ({ id, body, postId }, { getState, extra: { services } }) => {
+  async ({ id, body }, { getState, extra: { services } }) => {
     const updatedComment = await services.comment.updateComment({ id, body });
 
     const mapComments = comment => ({
@@ -155,14 +155,12 @@ const updateComment = createAsyncThunk(
     ));
 
     const {
-      posts: { posts }
+      posts: { posts, expandedPost }
     } = getState();
 
-    const updated = posts.map(post => (
-      post.id !== postId ? post : updatedComments(post.comments)
-    ));
+    const updatedExpandedPost = { ...expandedPost, comments: updatedComments(expandedPost.comments) };
 
-    return { posts: updated };
+    return { posts, expandedPost: updatedExpandedPost };
   }
 );
 

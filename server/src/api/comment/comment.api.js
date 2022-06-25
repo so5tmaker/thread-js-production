@@ -16,7 +16,7 @@ const initComment = (fastify, opts, done) => {
   fastify.route({
     method: HttpMethod.PUT,
     url: CommentsApiPath.$ID,
-    [ControllerHook.HANDLER]: async req => commentService.updateCommentById(req.user.id, req.body)
+    [ControllerHook.HANDLER]: async req => commentService.updateCommentById(req.params.id, req.body)
   });
 
   done();

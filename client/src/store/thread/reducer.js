@@ -8,7 +8,8 @@ import {
   applyPost,
   createPost,
   updatePost,
-  deletePost
+  deletePost,
+  updateComment
 } from './actions.js';
 
 const initialState = {
@@ -48,8 +49,16 @@ const reducer = createReducer(initialState, builder => {
 
     state.posts = posts;
   });
+  builder.addCase(
+    updateComment.fulfilled,
+    (state, action) => {
+      const { posts, expandedPost } = action.payload;
+      state.posts = posts;
+      state.expandedPost = expandedPost;
+    }
+  );
   builder.addMatcher(
-    isAnyOf(likePost.fulfilled, addComment.fulfilled),
+    isAnyOf(likePost.fulfilled, addComment.fulfilled, updateComment.fulfilled),
     (state, action) => {
       const { posts, expandedPost } = action.payload;
       state.posts = posts;
