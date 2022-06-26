@@ -6,6 +6,8 @@ const commentType = PropTypes.exact({
   body: PropTypes.string.isRequired,
   createdAt: PropTypes.string.isRequired,
   updatedAt: PropTypes.string.isRequired,
+  likeCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  dislikeCount: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   postId: PropTypes.number.isRequired,
   userId: PropTypes.number.isRequired,
   user: PropTypes.exact({

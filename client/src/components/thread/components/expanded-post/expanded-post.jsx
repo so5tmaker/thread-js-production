@@ -49,6 +49,16 @@ const ExpandedPost = ({ onSharePost, userId }) => {
     [dispatch]
   );
 
+  const handleCommentLike = useCallback(
+    id => dispatch(threadActionCreator.likeComment({ id, isLike: true })),
+    [dispatch]
+  );
+
+  const handleCommentDisLike = useCallback(
+    id => dispatch(threadActionCreator.likeComment({ id, isLike: false })),
+    [dispatch]
+  );
+
   const handleExpandedPostToggle = useCallback(
     id => dispatch(threadActionCreator.toggleExpandedPost(id)),
     [dispatch]
@@ -82,6 +92,8 @@ const ExpandedPost = ({ onSharePost, userId }) => {
                 userId={userId}
                 onFormClose={handleUpdateFormClose}
                 onCommentDelete={handleCommentDelete}
+                onCommentLike={handleCommentLike}
+                onCommentDisLike={handleCommentDisLike}
               />
             ))}
             {!updatedComment && (

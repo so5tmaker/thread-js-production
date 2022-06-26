@@ -85,7 +85,13 @@ const toggleExpandedPost = createAsyncThunk(
   ActionType.SET_EXPANDED_POST,
   async (postId, { extra: { services } }) => {
     const post = postId ? await services.post.getPost(postId) : undefined;
-    return { post };
+    const comments = postId ? await services.comment.getAllComments({ postId }) : undefined;
+    const mapPost = item => ({
+      ...item,
+      comments
+    });
+    const changed = post && comments ? mapPost(post) : post;
+    return { post: changed };
   }
 );
 
@@ -190,6 +196,29 @@ const deleteComment = createAsyncThunk(
   }
 );
 
+const likeComment = createAsyncThunk(
+  ActionType.REACT,
+  async ({ id: commentId, isLike }, { getState, extra: { services } }) => {
+    const { likeCount, dislikeCount } = await services.comment.likeComment(commentId, isLike);
+
+    const mapLikes = comment => ({
+      ...comment,
+      likeCount: Number(comment.likeCount) + likeCount,
+      dislikeCount: Number(comment.dislikeCount) + dislikeCount
+    });
+
+    const {
+      posts: { posts, expandedPost }
+    } = getState();
+    const updated = expandedPost.comments.map(comment => (
+      comment.id !== commentId ? comment : mapLikes(comment)
+    ));
+    const updatedExpandedPost = { ...expandedPost, comments: updated };
+
+    return { posts, expandedPost: updatedExpandedPost };
+  }
+);
+
 export {
   loadPosts,
   updatePost,
@@ -201,5 +230,6 @@ export {
   likePost,
   addComment,
   updateComment,
-  deleteComment
+  deleteComment,
+  likeComment
 };

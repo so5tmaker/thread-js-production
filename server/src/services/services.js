@@ -1,6 +1,7 @@
 import {
   user as userRepository,
   comment as commentRepository,
+  commentReaction as commentReactionRepository,
   image as imageRepository,
   post as postRepository,
   postReaction as postReactionRepository
@@ -19,7 +20,8 @@ const auth = new Auth({
 });
 
 const comment = new Comment({
-  commentRepository
+  commentRepository,
+  commentReactionRepository
 });
 
 const image = new Image({

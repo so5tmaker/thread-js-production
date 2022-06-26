@@ -11,6 +11,13 @@ class Comment {
     this._http = http;
   }
 
+  getAllComments(filter) {
+    return this._http.load(`${this._apiPath}${ApiPath.COMMENTS}`, {
+      method: HttpMethod.GET,
+      query: filter
+    });
+  }
+
   getComment(id) {
     return this._http.load(
       `${this._apiPath}${ApiPath.COMMENTS}${CommentsApiPath.ROOT}${id}`,
@@ -45,6 +52,20 @@ class Comment {
       `${this._apiPath}${ApiPath.COMMENTS}${CommentsApiPath.ROOT}${id}`,
       {
         method: HttpMethod.DELETE
+      }
+    );
+  }
+
+  likeComment(commentId, isLike) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.COMMENTS}${CommentsApiPath.REACT}`,
+      {
+        method: HttpMethod.PUT,
+        contentType: ContentType.JSON,
+        payload: JSON.stringify({
+          commentId,
+          isLike
+        })
       }
     );
   }

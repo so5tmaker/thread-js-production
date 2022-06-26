@@ -10,7 +10,8 @@ import {
   updatePost,
   deletePost,
   updateComment,
-  deleteComment
+  deleteComment,
+  likeComment
 } from './actions.js';
 
 const initialState = {
@@ -40,32 +41,21 @@ const reducer = createReducer(initialState, builder => {
 
     state.expandedPost = post;
   });
-  builder.addCase(updatePost.fulfilled, (state, action) => {
-    const { posts } = action.payload;
-    state.posts = posts;
-  });
-  builder.addCase(deletePost.fulfilled, (state, action) => {
-    const { posts } = action.payload;
-    state.posts = posts;
-  });
-  builder.addCase(
-    updateComment.fulfilled,
+  builder.addMatcher(
+    isAnyOf(updatePost.fulfilled, deletePost.fulfilled),
     (state, action) => {
-      const { posts, expandedPost } = action.payload;
+      const { posts } = action.payload;
       state.posts = posts;
-      state.expandedPost = expandedPost;
-    }
-  );
-  builder.addCase(
-    deleteComment.fulfilled,
-    (state, action) => {
-      const { posts, expandedPost } = action.payload;
-      state.posts = posts;
-      state.expandedPost = expandedPost;
     }
   );
   builder.addMatcher(
-    isAnyOf(likePost.fulfilled, addComment.fulfilled),
+    isAnyOf(
+      likePost.fulfilled,
+      addComment.fulfilled,
+      updateComment.fulfilled,
+      deleteComment.fulfilled,
+      likeComment.fulfilled
+    ),
     (state, action) => {
       const { posts, expandedPost } = action.payload;
       state.posts = posts;
@@ -76,7 +66,6 @@ const reducer = createReducer(initialState, builder => {
     isAnyOf(applyPost.fulfilled, createPost.fulfilled),
     (state, action) => {
       const { post } = action.payload;
-
       state.posts = [post, ...state.posts];
     }
   );

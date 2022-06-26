@@ -23,10 +23,7 @@ const UpdatePost = ({ onPostUpdate, onUploadImage, post }) => {
 
   const handleUpdatePost = useCallback(
     values => {
-      const {
-        body,
-        image: { id: imageId, link: imageLink }
-      } = post;
+      const { body, imageId, imageLink } = post;
       if (!values.body && !image) {
         setMessage('You did not change text in the area above!');
         return;
@@ -46,7 +43,7 @@ const UpdatePost = ({ onPostUpdate, onUploadImage, post }) => {
         setImage(undefined);
       });
     },
-    [image, reset, onPostUpdate]
+    [image, reset, onPostUpdate, post]
   );
 
   const handleUploadFile = ({ target }) => {

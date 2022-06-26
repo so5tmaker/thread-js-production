@@ -6,6 +6,7 @@ const TableName = {
   USERS: 'users',
   POSTS: 'posts',
   COMMENTS: 'comments',
+  COMMENT_REACTIONS: 'comment_reactions',
   POST_REACTIONS: 'post_reactions',
   IMAGES: 'images'
 };
@@ -14,6 +15,7 @@ const ColumnName = {
   IMAGE_ID: 'image_id',
   IS_LIKE: 'is_like',
   POST_ID: 'post_id',
+  COMMENT_ID: 'comment_id',
   USER_ID: 'user_id'
 };
 
@@ -26,6 +28,7 @@ export async function seed(knex) {
       await trx(TableName.USERS).del();
       await trx(TableName.POSTS).del();
       await trx(TableName.COMMENTS).del();
+      await trx(TableName.COMMENT_REACTIONS).del();
       await trx(TableName.POST_REACTIONS).del();
       await trx(TableName.IMAGES).del();
 
@@ -64,7 +67,15 @@ export async function seed(knex) {
         [ColumnName.USER_ID]: users[getRandomIndex(users.length)].id,
         [ColumnName.POST_ID]: posts[getRandomIndex(posts.length)].id
       }));
-      await trx(TableName.COMMENTS).insert(commentsMappedSeed);
+      const comments = await trx(TableName.COMMENTS).insert(commentsMappedSeed).returning('*');
+
+      // Add comment reactions.
+      const commentReactionsMappedSeed = users.map(user => ({
+        [ColumnName.IS_LIKE]: true,
+        [ColumnName.USER_ID]: user.id,
+        [ColumnName.COMMENT_ID]: comments[getRandomIndex(comments.length)].id
+      }));
+      await trx(TableName.COMMENT_REACTIONS).insert(commentReactionsMappedSeed);
 
       // Add post reactions.
       const postReactionsMappedSeed = users.map(user => ({
