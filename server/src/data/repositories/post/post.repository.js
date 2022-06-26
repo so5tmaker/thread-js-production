@@ -2,7 +2,8 @@ import { Abstract } from '../abstract/abstract.repository.js';
 import {
   getCommentsCountQuery,
   getReactionsQuery,
-  getWhereUserIdQuery
+  getWhereUserIdQuery,
+  getNotWhereUserIdQuery
 } from './helpers.js';
 
 class Post extends Abstract {
@@ -11,7 +12,9 @@ class Post extends Abstract {
   }
 
   getPosts(filter) {
-    const { from: offset, count: limit, userId } = filter;
+    const { from: offset, count: limit, userId, showHide } = filter;
+
+    const userIdQuery = id => (showHide === 'hide' ? getNotWhereUserIdQuery(id) : getWhereUserIdQuery(id));
 
     return this.model
       .query()
@@ -21,7 +24,7 @@ class Post extends Abstract {
         getReactionsQuery(this.model)(true),
         getReactionsQuery(this.model)(false)
       )
-      .where(getWhereUserIdQuery(userId))
+      .where(userIdQuery(userId))
       .withGraphFetched('[image, user.image]')
       .orderBy('createdAt', 'desc')
       .offset(offset)

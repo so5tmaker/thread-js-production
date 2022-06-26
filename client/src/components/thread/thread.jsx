@@ -24,7 +24,8 @@ import styles from './styles.module.scss';
 const postsFilter = {
   userId: undefined,
   from: 0,
-  count: 10
+  count: 10,
+  showHide: 'show'
 };
 
 const Thread = () => {
@@ -44,6 +45,7 @@ const Thread = () => {
   });
 
   const showOwnPosts = watch(ThreadToolbarKey.SHOW_OWN_POSTS);
+  const hideOwnPosts = watch(ThreadToolbarKey.HIDE_OWN_POSTS);
 
   const handlePostsLoad = useCallback(
     filtersPayload => {
@@ -55,6 +57,7 @@ const Thread = () => {
   const handleToggleShowOwnPosts = useCallback(() => {
     postsFilter.userId = showOwnPosts ? userId : undefined;
     postsFilter.from = 0;
+    postsFilter.showHide = 'show';
     handlePostsLoad(postsFilter);
     postsFilter.from = postsFilter.count; // for the next scroll
   }, [userId, showOwnPosts, handlePostsLoad]);
@@ -62,6 +65,18 @@ const Thread = () => {
   useEffect(() => {
     handleToggleShowOwnPosts();
   }, [showOwnPosts, handleToggleShowOwnPosts]);
+
+  const handleToggleHideOwnPosts = useCallback(() => {
+    postsFilter.userId = hideOwnPosts ? userId : undefined;
+    postsFilter.from = 0;
+    postsFilter.showHide = 'hide';
+    handlePostsLoad(postsFilter);
+    postsFilter.from = postsFilter.count; // for the next scroll
+  }, [userId, hideOwnPosts, handlePostsLoad]);
+
+  useEffect(() => {
+    handleToggleHideOwnPosts();
+  }, [hideOwnPosts, handleToggleHideOwnPosts]);
 
   const handlePostLike = useCallback(
     id => dispatch(threadActionCreator.likePost({ id, isLike: true })),
@@ -128,15 +143,29 @@ const Thread = () => {
       <div className={styles.addPostForm}>
         <AddPost onPostAdd={handlePostAdd} onUploadImage={handleUploadImage} />
       </div>
-      <form name="thread-toolbar">
-        <div className={styles.toolbar}>
-          <Checkbox
-            name={ThreadToolbarKey.SHOW_OWN_POSTS}
-            control={control}
-            label="Show only my posts"
-          />
-        </div>
-      </form>
+      {hideOwnPosts || (
+        <form name="thread-toolbar">
+          <div className={styles.toolbar}>
+            <Checkbox
+              name={ThreadToolbarKey.SHOW_OWN_POSTS}
+              control={control}
+              label="Show only my posts"
+            />
+          </div>
+        </form>
+      )}
+      {showOwnPosts || (
+        <form name="thread-toolbar">
+          <div className={styles.toolbar}>
+            <Checkbox
+              name={ThreadToolbarKey.HIDE_OWN_POSTS}
+              control={control}
+              label="Hide only my posts"
+            />
+          </div>
+        </form>
+      )}
+
       <InfiniteScroll
         dataLength={posts.length}
         next={handleGetMorePosts}

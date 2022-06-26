@@ -15,4 +15,10 @@ const getWhereUserIdQuery = userId => builder => {
   }
 };
 
-export { getCommentsCountQuery, getReactionsQuery, getWhereUserIdQuery };
+const getNotWhereUserIdQuery = userId => builder => {
+  if (userId) {
+    builder.whereNot({ userId });
+  }
+};
+
+export { getCommentsCountQuery, getReactionsQuery, getWhereUserIdQuery, getNotWhereUserIdQuery };
