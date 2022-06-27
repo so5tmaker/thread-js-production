@@ -3,7 +3,8 @@ import {
   getCommentsCountQuery,
   getReactionsQuery,
   getWhereUserIdQuery,
-  getNotWhereUserIdQuery
+  getNotWhereUserIdQuery,
+  getwhereExistsUserIdQuery
 } from './helpers.js';
 
 class Post extends Abstract {
@@ -14,7 +15,16 @@ class Post extends Abstract {
   getPosts(filter) {
     const { from: offset, count: limit, userId, showHide } = filter;
 
-    const userIdQuery = id => (showHide === 'hide' ? getNotWhereUserIdQuery(id) : getWhereUserIdQuery(id));
+    const userIdQuery = id => {
+      switch (showHide) {
+        case 'hide':
+          return getNotWhereUserIdQuery(id);
+        case 'likedbyme':
+          return getwhereExistsUserIdQuery(this.model)(id);
+        default:
+          return getWhereUserIdQuery(id);
+      }
+    };
 
     return this.model
       .query()

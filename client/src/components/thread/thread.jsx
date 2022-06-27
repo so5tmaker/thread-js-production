@@ -46,6 +46,7 @@ const Thread = () => {
 
   const showOwnPosts = watch(ThreadToolbarKey.SHOW_OWN_POSTS);
   const hideOwnPosts = watch(ThreadToolbarKey.HIDE_OWN_POSTS);
+  const showPostsLikedByMe = watch(ThreadToolbarKey.SHOW_POSTS_LIKED_BY_ME);
 
   const handlePostsLoad = useCallback(
     filtersPayload => {
@@ -77,6 +78,18 @@ const Thread = () => {
   useEffect(() => {
     handleToggleHideOwnPosts();
   }, [hideOwnPosts, handleToggleHideOwnPosts]);
+
+  const handleToggleShowPostsLikedByMe = useCallback(() => {
+    postsFilter.userId = showPostsLikedByMe ? userId : undefined;
+    postsFilter.from = 0;
+    postsFilter.showHide = 'likedbyme';
+    handlePostsLoad(postsFilter);
+    postsFilter.from = postsFilter.count; // for the next scroll
+  }, [userId, showPostsLikedByMe, handlePostsLoad]);
+
+  useEffect(() => {
+    handleToggleShowPostsLikedByMe();
+  }, [handleToggleShowPostsLikedByMe]);
 
   const handlePostLike = useCallback(
     id => dispatch(threadActionCreator.likePost({ id, isLike: true })),
@@ -143,7 +156,7 @@ const Thread = () => {
       <div className={styles.addPostForm}>
         <AddPost onPostAdd={handlePostAdd} onUploadImage={handleUploadImage} />
       </div>
-      {hideOwnPosts || (
+      {hideOwnPosts || showPostsLikedByMe || (
         <form name="thread-toolbar">
           <div className={styles.toolbar}>
             <Checkbox
@@ -154,13 +167,24 @@ const Thread = () => {
           </div>
         </form>
       )}
-      {showOwnPosts || (
+      {showOwnPosts || showPostsLikedByMe || (
         <form name="thread-toolbar">
           <div className={styles.toolbar}>
             <Checkbox
               name={ThreadToolbarKey.HIDE_OWN_POSTS}
               control={control}
               label="Hide only my posts"
+            />
+          </div>
+        </form>
+      )}
+      {showOwnPosts || hideOwnPosts || (
+        <form name="thread-toolbar">
+          <div className={styles.toolbar}>
+            <Checkbox
+              name={ThreadToolbarKey.SHOW_POSTS_LIKED_BY_ME}
+              control={control}
+              label="Show posts liked by me"
             />
           </div>
         </form>

@@ -21,4 +21,23 @@ const getNotWhereUserIdQuery = userId => builder => {
   }
 };
 
-export { getCommentsCountQuery, getReactionsQuery, getWhereUserIdQuery, getNotWhereUserIdQuery };
+const getReactionsByUserIdQuery = model => userId => {
+  return model.relatedQuery('postReactions')
+    .where({ userId })
+    .where({ isLike: true });
+};
+
+const getwhereExistsUserIdQuery = model => userId => builder => {
+  if (userId) {
+    builder.whereExists(getReactionsByUserIdQuery(model)(userId));
+  }
+};
+
+export {
+  getCommentsCountQuery,
+  getReactionsQuery,
+  getWhereUserIdQuery,
+  getNotWhereUserIdQuery,
+  getReactionsByUserIdQuery,
+  getwhereExistsUserIdQuery
+};
