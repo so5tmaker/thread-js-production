@@ -2,7 +2,6 @@ const TableName = {
   USERS: 'users',
   POSTS: 'posts',
   COMMENTS: 'comments',
-  COMMENT_REACTIONS: 'comment_reactions',
   POST_REACTIONS: 'post_reactions',
   IMAGES: 'images'
 };
@@ -43,13 +42,6 @@ export async function up(knex) {
     table.dateTime(ColumnName.UPDATED_AT).notNullable().defaultTo(knex.fn.now());
   });
 
-  await knex.schema.createTable(TableName.COMMENT_REACTIONS, table => {
-    table.increments(ColumnName.ID).primary();
-    table.boolean(ColumnName.IS_LIKE).notNullable().defaultTo(true);
-    table.dateTime(ColumnName.CREATED_AT).notNullable().defaultTo(knex.fn.now());
-    table.dateTime(ColumnName.UPDATED_AT).notNullable().defaultTo(knex.fn.now());
-  });
-
   await knex.schema.createTable(TableName.POST_REACTIONS, table => {
     table.increments(ColumnName.ID).primary();
     table.boolean(ColumnName.IS_LIKE).notNullable().defaultTo(true);
@@ -69,7 +61,6 @@ export async function down(knex) {
   await knex.schema.dropTableIfExists(TableName.USERS);
   await knex.schema.dropTableIfExists(TableName.POSTS);
   await knex.schema.dropTableIfExists(TableName.COMMENTS);
-  await knex.schema.dropTableIfExists(TableName.COMMENT_REACTIONS);
   await knex.schema.dropTableIfExists(TableName.POST_REACTIONS);
   await knex.schema.dropTableIfExists(TableName.IMAGES);
 }
