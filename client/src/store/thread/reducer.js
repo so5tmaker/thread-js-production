@@ -11,13 +11,15 @@ import {
   deletePost,
   updateComment,
   deleteComment,
-  likeComment
+  likeComment,
+  loadUsers
 } from './actions.js';
 
 const initialState = {
   posts: [],
   expandedPost: null,
-  hasMorePosts: true
+  hasMorePosts: true,
+  users: []
 };
 
 const reducer = createReducer(initialState, builder => {
@@ -40,6 +42,11 @@ const reducer = createReducer(initialState, builder => {
     const { post } = action.payload;
 
     state.expandedPost = post;
+  });
+  builder.addCase(loadUsers.fulfilled, (state, action) => {
+    const { users } = action.payload;
+
+    state.users = users;
   });
   builder.addMatcher(
     isAnyOf(updatePost.fulfilled, deletePost.fulfilled),

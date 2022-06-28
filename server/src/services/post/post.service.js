@@ -55,6 +55,14 @@ class Post {
       ? { likeCount, dislikeCount }
       : { ...await this._postReactionRepository.getPostReaction(userId, postId), likeCount, dislikeCount };
   }
+
+  async getUsersLikedPost(postId) {
+    const result = await this._postReactionRepository.getUsersLikedPost(postId);
+
+    const users = result.map(item => item.user.username);
+
+    return users;
+  }
 }
 
 export { Post };

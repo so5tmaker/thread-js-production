@@ -1,4 +1,5 @@
 import { Abstract } from '../abstract/abstract.repository.js';
+// import { getUsersQuery } from './helpers.js';
 
 class PostReaction extends Abstract {
   constructor({ postReactionModel }) {
@@ -13,6 +14,15 @@ class PostReaction extends Abstract {
       .andWhere({ postId })
       .withGraphFetched('[post]')
       .first();
+  }
+
+  getUsersLikedPost(postId) {
+    return this.model
+      .query()
+      .select('postReactions.userId')
+      .where({ postId })
+      .andWhere({ isLike: true })
+      .withGraphFetched('[user]');
   }
 }
 

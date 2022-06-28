@@ -24,7 +24,7 @@ const getNotWhereUserIdQuery = userId => builder => {
 const getReactionsByUserIdQuery = model => userId => {
   return model.relatedQuery('postReactions')
     .where({ userId })
-    .where({ isLike: true });
+    .andWhere({ isLike: true });
 };
 
 const getwhereExistsUserIdQuery = model => userId => builder => {

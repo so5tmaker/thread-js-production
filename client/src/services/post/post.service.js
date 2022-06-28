@@ -63,6 +63,15 @@ class Post {
       }
     );
   }
+
+  getUsersLikedPost(id) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.POSTS}${PostsApiPath.REACT}${PostsApiPath.ROOT}${id}`,
+      {
+        method: HttpMethod.GET
+      }
+    );
+  }
 }
 
 export { Post };

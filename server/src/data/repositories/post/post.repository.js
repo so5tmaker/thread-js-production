@@ -7,6 +7,8 @@ import {
   getwhereExistsUserIdQuery
 } from './helpers.js';
 
+import { THREAD_TOOLBAR_KEY } from '../../../common/constants/constants.js';
+
 class Post extends Abstract {
   constructor({ postModel }) {
     super(postModel);
@@ -17,12 +19,11 @@ class Post extends Abstract {
 
     const userIdQuery = id => {
       switch (showHide) {
-        case 'hide':
+        case THREAD_TOOLBAR_KEY.HIDE_OWN_POSTS:
           return getNotWhereUserIdQuery(id);
-        case 'likedbyme':
+        case THREAD_TOOLBAR_KEY.SHOW_POSTS_LIKED_BY_ME:
           return getwhereExistsUserIdQuery(this.model)(id);
-        default:
-          return getWhereUserIdQuery(id);
+        default: return getWhereUserIdQuery(id);
       }
     };
 

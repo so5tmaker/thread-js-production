@@ -38,7 +38,7 @@ class PostReaction extends AbstractModel {
       user: {
         relation: Model.HasOneRelation,
         modelClass: UserModel,
-        filter: query => query.select('id', 'userId'),
+        filter: query => query.select('id', 'username'),
         join: {
           from: `${DbTableName.POST_REACTIONS}.userId`,
           to: `${DbTableName.USERS}.id`

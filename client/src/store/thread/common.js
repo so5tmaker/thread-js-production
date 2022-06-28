@@ -8,8 +8,7 @@ const ActionType = {
   REACT: 'thread/react',
   COMMENT: 'thread/comment',
   UPDATE_COMMENT: 'thread/update-comment',
-  DELETE_COMMENT: 'thread/delete-comment',
-  SET_ALL_COMMENTS: 'thread/set-all-comments'
+  DELETE_COMMENT: 'thread/delete-comment'
 };
 
 export { ActionType };

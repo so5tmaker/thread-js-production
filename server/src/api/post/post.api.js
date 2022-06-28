@@ -47,6 +47,11 @@ const initPost = (fastify, opts, done) => {
       return reaction;
     }
   });
+  fastify.route({
+    method: HttpMethod.GET,
+    url: `${PostsApiPath.REACT}${PostsApiPath.$ID}`,
+    [ControllerHook.HANDLER]: req => postService.getUsersLikedPost(req.params.id)
+  });
 
   done();
 };

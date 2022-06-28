@@ -8,9 +8,17 @@ import styles from './styles.module.scss';
 const IconButton = ({
   iconName,
   label,
-  onClick
+  onClick,
+  onMouseEnter,
+  onMouseLeave
 }) => (
-  <button className={styles.iconButton} type="button" onClick={onClick}>
+  <button
+    className={styles.iconButton}
+    type="button"
+    onClick={onClick}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+  >
     <Icon name={iconName} />
     {label}
   </button>
@@ -19,11 +27,15 @@ const IconButton = ({
 IconButton.propTypes = {
   iconName: PropTypes.oneOf(Object.values(IconName)).isRequired,
   label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func,
+  onMouseLeave: PropTypes.func
 };
 
 IconButton.defaultProps = {
-  label: ''
+  label: '',
+  onMouseEnter: () => {},
+  onMouseLeave: () => {}
 };
 
 export { IconButton };

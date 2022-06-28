@@ -15,7 +15,8 @@ import {
   ExpandedPost,
   SharedPostLink,
   AddPost,
-  UpdatePost
+  UpdatePost,
+  UsersList
 } from './components/components.js';
 import { DEFAULT_THREAD_TOOLBAR } from './common/constants.js';
 
@@ -25,19 +26,23 @@ const postsFilter = {
   userId: undefined,
   from: 0,
   count: 10,
-  showHide: 'show'
+  showHide: ThreadToolbarKey.SHOW_OWN_POSTS
 };
 
 const Thread = () => {
   const dispatch = useDispatch();
-  const { posts, hasMorePosts, expandedPost, userId } = useSelector(state => ({
-    posts: state.posts.posts,
-    hasMorePosts: state.posts.hasMorePosts,
-    expandedPost: state.posts.expandedPost,
-    userId: state.profile.user.id
-  }));
+  const { posts, hasMorePosts, expandedPost, userId, users } = useSelector(
+    state => ({
+      posts: state.posts.posts,
+      hasMorePosts: state.posts.hasMorePosts,
+      expandedPost: state.posts.expandedPost,
+      userId: state.profile.user.id,
+      users: state.posts.users
+    })
+  );
   const [sharedPostId, setSharedPostId] = useState(undefined);
   const [updatedPostId, setUpdatedPostId] = useState(undefined);
+  const [divOrientation, setdivOrientation] = useState({ top: 0, left: 0 });
 
   const { control, watch } = useAppForm({
     defaultValues: DEFAULT_THREAD_TOOLBAR,
@@ -58,7 +63,7 @@ const Thread = () => {
   const handleToggleShowOwnPosts = useCallback(() => {
     postsFilter.userId = showOwnPosts ? userId : undefined;
     postsFilter.from = 0;
-    postsFilter.showHide = 'show';
+    postsFilter.showHide = ThreadToolbarKey.SHOW_OWN_POSTS;
     handlePostsLoad(postsFilter);
     postsFilter.from = postsFilter.count; // for the next scroll
   }, [userId, showOwnPosts, handlePostsLoad]);
@@ -70,7 +75,7 @@ const Thread = () => {
   const handleToggleHideOwnPosts = useCallback(() => {
     postsFilter.userId = hideOwnPosts ? userId : undefined;
     postsFilter.from = 0;
-    postsFilter.showHide = 'hide';
+    postsFilter.showHide = ThreadToolbarKey.HIDE_OWN_POSTS;
     handlePostsLoad(postsFilter);
     postsFilter.from = postsFilter.count; // for the next scroll
   }, [userId, hideOwnPosts, handlePostsLoad]);
@@ -82,7 +87,7 @@ const Thread = () => {
   const handleToggleShowPostsLikedByMe = useCallback(() => {
     postsFilter.userId = showPostsLikedByMe ? userId : undefined;
     postsFilter.from = 0;
-    postsFilter.showHide = 'likedbyme';
+    postsFilter.showHide = ThreadToolbarKey.SHOW_POSTS_LIKED_BY_ME;
     handlePostsLoad(postsFilter);
     postsFilter.from = postsFilter.count; // for the next scroll
   }, [userId, showPostsLikedByMe, handlePostsLoad]);
@@ -121,6 +126,15 @@ const Thread = () => {
 
   const handlePostDelete = useCallback(
     id => dispatch(threadActionCreator.deletePost(id)),
+    [dispatch]
+  );
+
+  const handlePostLikesHover = useCallback(
+    postPayload => {
+      const { top, left, id, isLeaving } = postPayload;
+      setdivOrientation({ top, left });
+      return dispatch(threadActionCreator.loadUsers({ id, isLeaving }));
+    },
     [dispatch]
   );
 
@@ -208,6 +222,7 @@ const Thread = () => {
               onSharePost={handleSharePost}
               onEditPost={handleUpdatedPost}
               onDeletePost={handlePostDelete}
+              onHoverPostLikes={handlePostLikesHover}
             />
             {updatedPostId === post.id && (
               <UpdatePost
@@ -226,6 +241,13 @@ const Thread = () => {
         <SharedPostLink
           postId={sharedPostId}
           onClose={handleCloseSharedPostLink}
+        />
+      )}
+      {users && users.length && (
+        <UsersList
+          top={divOrientation.top}
+          left={divOrientation.left}
+          users={users}
         />
       )}
     </div>

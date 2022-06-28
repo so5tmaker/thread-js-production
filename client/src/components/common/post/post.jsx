@@ -15,7 +15,8 @@ const Post = ({
   onSharePost,
   onEditPost,
   userId,
-  onDeletePost
+  onDeletePost,
+  onHoverPostLikes
 }) => {
   const {
     id,
@@ -35,6 +36,14 @@ const Post = ({
   const handleSharePost = () => onSharePost(id);
   const handleEditPost = () => onEditPost(id);
   const handleDeletePost = () => onDeletePost(id);
+  const handleHoverPostLikes = (e, isLeaving) => {
+    return onHoverPostLikes({
+      top: e.pageY,
+      left: e.pageX,
+      id,
+      isLeaving
+    });
+  };
 
   return (
     <div className={styles.card}>
@@ -50,6 +59,8 @@ const Post = ({
           iconName={IconName.THUMBS_UP}
           label={likeCount}
           onClick={handlePostLike}
+          onMouseEnter={e => handleHoverPostLikes(e, false)}
+          onMouseLeave={e => handleHoverPostLikes(e, true)}
         />
         <IconButton
           iconName={IconName.THUMBS_DOWN}
@@ -90,7 +101,12 @@ Post.propTypes = {
   onSharePost: PropTypes.func.isRequired,
   onEditPost: PropTypes.func.isRequired,
   userId: PropTypes.number.isRequired,
-  onDeletePost: PropTypes.func.isRequired
+  onDeletePost: PropTypes.func.isRequired,
+  onHoverPostLikes: PropTypes.func
+};
+
+Post.defaultProps = {
+  onHoverPostLikes: () => {}
 };
 
 export { Post };

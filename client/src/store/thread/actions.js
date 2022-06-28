@@ -219,6 +219,15 @@ const likeComment = createAsyncThunk(
   }
 );
 
+const loadUsers = createAsyncThunk(
+  ActionType.SET_ALL_USERS,
+  async ({ id, isLeaving }, { extra: { services } }) => {
+    const users = !isLeaving
+      ? await services.post.getUsersLikedPost(id) : undefined;
+    return { users };
+  }
+);
+
 export {
   loadPosts,
   updatePost,
@@ -231,5 +240,6 @@ export {
   addComment,
   updateComment,
   deleteComment,
-  likeComment
+  likeComment,
+  loadUsers
 };

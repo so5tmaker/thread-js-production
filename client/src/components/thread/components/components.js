@@ -5,3 +5,4 @@ export { AddComment } from './add-comment/add-comment.jsx';
 export { UpdateComment } from './update-comment/update-comment.jsx';
 export { ExpandedPost } from './expanded-post/expanded-post.jsx';
 export { SharedPostLink } from './shared-post-link/shared-post-link.jsx';
+export { UsersList } from './users-list/users-list.jsx';
