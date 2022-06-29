@@ -46,6 +46,12 @@ const initComment = (fastify, opts, done) => {
     }
   });
 
+  fastify.route({
+    method: HttpMethod.GET,
+    url: `${CommentsApiPath.REACT}${CommentsApiPath.$ID}`,
+    [ControllerHook.HANDLER]: req => commentService.getUsersLikedComment(req.params.id)
+  });
+
   done();
 };
 

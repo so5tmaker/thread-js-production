@@ -69,6 +69,15 @@ class Comment {
       }
     );
   }
+
+  getUsersLikedComment(id) {
+    return this._http.load(
+      `${this._apiPath}${ApiPath.COMMENTS}${CommentsApiPath.REACT}${CommentsApiPath.ROOT}${id}`,
+      {
+        method: HttpMethod.GET
+      }
+    );
+  }
 }
 
 export { Comment };

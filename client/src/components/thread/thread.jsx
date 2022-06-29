@@ -123,7 +123,7 @@ const Thread = () => {
     postPayload => {
       const { top, left, id, isLeaving } = postPayload;
       setdivOrientation({ top, left });
-      return dispatch(threadActionCreator.loadUsers({ id, isLeaving }));
+      return dispatch(threadActionCreator.loadPostUsers({ id, isLeaving }));
     },
     [dispatch]
   );

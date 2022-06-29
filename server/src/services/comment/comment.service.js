@@ -55,6 +55,12 @@ class Comment {
       ? { likeCount, dislikeCount }
       : { ...await this._commentReactionRepository.getCommentReaction(userId, commentId), likeCount, dislikeCount };
   }
+
+  async getUsersLikedComment(commentId) {
+    const result = await this._commentReactionRepository.getUsersLikedComment(commentId);
+    const users = result.map(item => item.user.username);
+    return users;
+  }
 }
 
 export { Comment };

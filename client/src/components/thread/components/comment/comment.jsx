@@ -13,10 +13,20 @@ const Comment = ({
   onFormClose,
   onCommentDelete,
   onCommentLike,
-  onCommentDisLike
+  onCommentDisLike,
+  onHoverCommentLikes
 }) => {
   const handleCommentLike = () => onCommentLike(id);
   const handleCommentDisLike = () => onCommentDisLike(id);
+  const handleHoverCommentsLikes = (e, isLeaving) => {
+    return onHoverCommentLikes({
+      top: e.pageY,
+      left: e.pageX,
+      id,
+      isLeaving
+    });
+  };
+
   return (
     <div className={styles.comment}>
       <div>
@@ -35,6 +45,8 @@ const Comment = ({
             iconName={IconName.THUMBS_UP}
             label={likeCount}
             onClick={handleCommentLike}
+            onMouseEnter={e => handleHoverCommentsLikes(e, false)}
+            onMouseLeave={e => handleHoverCommentsLikes(e, true)}
           />
           <IconButton
             className={styles.icon}
@@ -65,7 +77,12 @@ Comment.propTypes = {
   onFormClose: PropTypes.func.isRequired,
   onCommentDelete: PropTypes.func.isRequired,
   onCommentLike: PropTypes.func.isRequired,
-  onCommentDisLike: PropTypes.func.isRequired
+  onCommentDisLike: PropTypes.func.isRequired,
+  onHoverCommentLikes: PropTypes.func
+};
+
+Comment.defaultProps = {
+  onHoverCommentLikes: () => {}
 };
 
 export { Comment };

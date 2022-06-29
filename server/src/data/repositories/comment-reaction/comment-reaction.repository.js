@@ -14,6 +14,15 @@ class CommentReaction extends Abstract {
       .withGraphFetched('[comment]')
       .first();
   }
+
+  getUsersLikedComment(commentId) {
+    return this.model
+      .query()
+      .select('commentReactions.userId')
+      .where({ commentId })
+      .andWhere({ isLike: true })
+      .withGraphFetched('[user]');
+  }
 }
 
 export { CommentReaction };

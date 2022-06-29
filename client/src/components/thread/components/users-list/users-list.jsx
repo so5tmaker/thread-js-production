@@ -8,7 +8,11 @@ const UsersList = ({ users, top, left }) => {
   return (
     <div>
       {users && (
-        <UserList top={top} left={left}>
+        <UserList
+          top={top}
+          left={left}
+          display={users.length ? 'flex' : 'none'}
+        >
           {userArray}
         </UserList>
       )}

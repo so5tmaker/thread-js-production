@@ -58,9 +58,7 @@ class Post {
 
   async getUsersLikedPost(postId) {
     const result = await this._postReactionRepository.getUsersLikedPost(postId);
-
     const users = result.map(item => item.user.username);
-
     return users;
   }
 }

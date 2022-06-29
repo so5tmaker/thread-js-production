@@ -219,11 +219,20 @@ const likeComment = createAsyncThunk(
   }
 );
 
-const loadUsers = createAsyncThunk(
+const loadPostUsers = createAsyncThunk(
   ActionType.SET_ALL_USERS,
   async ({ id, isLeaving }, { extra: { services } }) => {
     const users = !isLeaving
       ? await services.post.getUsersLikedPost(id) : undefined;
+    return { users };
+  }
+);
+
+const loadCommentUsers = createAsyncThunk(
+  ActionType.SET_ALL_USERS,
+  async ({ id, isLeaving }, { extra: { services } }) => {
+    const users = !isLeaving
+      ? await services.comment.getUsersLikedComment(id) : undefined;
     return { users };
   }
 );
@@ -241,5 +250,6 @@ export {
   updateComment,
   deleteComment,
   likeComment,
-  loadUsers
+  loadPostUsers,
+  loadCommentUsers
 };

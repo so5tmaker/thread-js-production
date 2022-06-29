@@ -10,16 +10,19 @@ import { Spinner, Post, Modal } from 'components/common/common.js';
 import {
   Comment,
   AddComment,
-  UpdateComment
+  UpdateComment,
+  UsersList
 } from 'components/thread/components/components.js';
 import { getSortedComments } from './helpers/helpers.js';
 
 const ExpandedPost = ({ onSharePost, userId }) => {
   const dispatch = useDispatch();
-  const { post } = useSelector(state => ({
-    post: state.posts.expandedPost
+  const { post, users } = useSelector(state => ({
+    post: state.posts.expandedPost,
+    users: state.posts.users
   }));
   const [updatedComment, setUpdatedComment] = useState(undefined);
+  const [divOrientation, setdivOrientation] = useState({ top: 0, left: 0 });
 
   const handlePostLike = useCallback(
     id => dispatch(threadActionCreator.likePost({ id, isLike: true })),
@@ -70,6 +73,21 @@ const ExpandedPost = ({ onSharePost, userId }) => {
     setUpdatedComment(!updatedComment ? comment : undefined);
   };
 
+  const handleCommentLikesHover = useCallback(
+    postPayload => {
+      const { top, left, id, isLeaving } = postPayload;
+      setdivOrientation({ top, left });
+      return dispatch(
+        threadActionCreator.loadCommentUsers({
+          id,
+          isLeaving,
+          isComments: true
+        })
+      );
+    },
+    [dispatch]
+  );
+
   const sortedComments = getSortedComments(post.comments ?? []);
 
   return (
@@ -94,6 +112,7 @@ const ExpandedPost = ({ onSharePost, userId }) => {
                 onCommentDelete={handleCommentDelete}
                 onCommentLike={handleCommentLike}
                 onCommentDisLike={handleCommentDisLike}
+                onHoverCommentLikes={handleCommentLikesHover}
               />
             ))}
             {!updatedComment && (
@@ -107,6 +126,11 @@ const ExpandedPost = ({ onSharePost, userId }) => {
               />
             )}
           </div>
+          <UsersList
+            top={divOrientation.top}
+            left={divOrientation.left}
+            users={users}
+          />
         </>
       ) : (
         <Spinner />

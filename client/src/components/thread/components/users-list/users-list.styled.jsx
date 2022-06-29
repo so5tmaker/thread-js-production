@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 const StyledUsersList = styled.div`
-  display: flex;
+  display: ${({ display }) => display};
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
