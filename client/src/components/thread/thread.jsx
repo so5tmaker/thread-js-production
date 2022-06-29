@@ -60,41 +60,31 @@ const Thread = () => {
     [dispatch]
   );
 
-  const handleToggleShowOwnPosts = useCallback(() => {
-    postsFilter.userId = showOwnPosts ? userId : undefined;
-    postsFilter.from = 0;
-    postsFilter.showHide = ThreadToolbarKey.SHOW_OWN_POSTS;
-    handlePostsLoad(postsFilter);
-    postsFilter.from = postsFilter.count; // for the next scroll
-  }, [userId, showOwnPosts, handlePostsLoad]);
+  const handleTogglePosts = useCallback(
+    (showHidePosts, showHideFilter) => {
+      postsFilter.userId = showHidePosts ? userId : undefined;
+      postsFilter.from = 0;
+      postsFilter.showHide = showHideFilter;
+      handlePostsLoad(postsFilter);
+      postsFilter.from = postsFilter.count; // for the next scroll
+    },
+    [userId, handlePostsLoad]
+  );
 
   useEffect(() => {
-    handleToggleShowOwnPosts();
-  }, [showOwnPosts, handleToggleShowOwnPosts]);
-
-  const handleToggleHideOwnPosts = useCallback(() => {
-    postsFilter.userId = hideOwnPosts ? userId : undefined;
-    postsFilter.from = 0;
-    postsFilter.showHide = ThreadToolbarKey.HIDE_OWN_POSTS;
-    handlePostsLoad(postsFilter);
-    postsFilter.from = postsFilter.count; // for the next scroll
-  }, [userId, hideOwnPosts, handlePostsLoad]);
+    handleTogglePosts(showOwnPosts, ThreadToolbarKey.SHOW_OWN_POSTS);
+  }, [showOwnPosts, handleTogglePosts]);
 
   useEffect(() => {
-    handleToggleHideOwnPosts();
-  }, [hideOwnPosts, handleToggleHideOwnPosts]);
-
-  const handleToggleShowPostsLikedByMe = useCallback(() => {
-    postsFilter.userId = showPostsLikedByMe ? userId : undefined;
-    postsFilter.from = 0;
-    postsFilter.showHide = ThreadToolbarKey.SHOW_POSTS_LIKED_BY_ME;
-    handlePostsLoad(postsFilter);
-    postsFilter.from = postsFilter.count; // for the next scroll
-  }, [userId, showPostsLikedByMe, handlePostsLoad]);
+    handleTogglePosts(hideOwnPosts, ThreadToolbarKey.HIDE_OWN_POSTS);
+  }, [hideOwnPosts, handleTogglePosts]);
 
   useEffect(() => {
-    handleToggleShowPostsLikedByMe();
-  }, [handleToggleShowPostsLikedByMe]);
+    handleTogglePosts(
+      showPostsLikedByMe,
+      ThreadToolbarKey.SHOW_POSTS_LIKED_BY_ME
+    );
+  }, [showPostsLikedByMe, handleTogglePosts]);
 
   const handlePostLike = useCallback(
     id => dispatch(threadActionCreator.likePost({ id, isLike: true })),
@@ -243,13 +233,11 @@ const Thread = () => {
           onClose={handleCloseSharedPostLink}
         />
       )}
-      {users && users.length && (
-        <UsersList
-          top={divOrientation.top}
-          left={divOrientation.left}
-          users={users}
-        />
-      )}
+      <UsersList
+        top={divOrientation.top}
+        left={divOrientation.left}
+        users={users}
+      />
     </div>
   );
 };
