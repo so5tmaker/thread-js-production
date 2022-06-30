@@ -43,7 +43,7 @@ const AddPost = ({ onPostAdd, onUploadImage }) => {
         setImage({ imageId, imageLink });
       })
       .catch(() => {
-        // TODO: show error
+        throw new Error('Can not upload file!');
       })
       .finally(() => {
         setIsUploading(false);

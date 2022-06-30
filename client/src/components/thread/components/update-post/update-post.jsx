@@ -55,7 +55,7 @@ const UpdatePost = ({ onPostUpdate, onUploadImage, post }) => {
         setImage({ imageId, imageLink });
       })
       .catch(() => {
-        // TODO: show error
+        throw new Error('Can not upload file!');
       })
       .finally(() => {
         setIsUploading(false);

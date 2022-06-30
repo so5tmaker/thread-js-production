@@ -32,8 +32,8 @@ const LoginForm = ({ onLogin }) => {
     onLogin(values)
       .unwrap()
       .catch(() => {
-        // TODO: show error
         setIsLoading(false);
+        throw new Error('Can not log in!');
       });
   };
 

@@ -32,18 +32,15 @@ const RegistrationForm = ({ onRegister }) => {
     onRegister(values)
       .unwrap()
       .catch(() => {
-        // TODO: show error
         setIsLoading(false);
+        throw new Error('Can not register!');
       });
   };
 
   return (
     <>
       <h2 className={styles.title}>Register for free account</h2>
-      <form
-        name="registrationForm"
-        onSubmit={handleSubmit(handleRegister)}
-      >
+      <form name="registrationForm" onSubmit={handleSubmit(handleRegister)}>
         <Segment>
           <fieldset disabled={isLoading} className={styles.fieldset}>
             <Input
