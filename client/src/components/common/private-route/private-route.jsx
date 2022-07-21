@@ -11,9 +11,14 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 
   const hasUser = Boolean(user);
 
-  return hasUser
-    ? <Component {...rest} />
-    : <Navigate to={{ pathname: AppRoute.LOGIN, state: { from: rest.location } }} />;
+  return hasUser ? (
+    <Component {...rest} />
+  ) : (
+    <Navigate
+      to={{ pathname: AppRoute.LOGIN }}
+      state={{ from: rest.location }}
+    />
+  );
 };
 
 PrivateRoute.propTypes = {

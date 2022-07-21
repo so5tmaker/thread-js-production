@@ -11,9 +11,14 @@ const PublicRoute = ({ component: Component, ...rest }) => {
 
   const hasUser = Boolean(user);
 
-  return hasUser
-    ? <Navigate to={{ pathname: AppRoute.ROOT, state: { from: rest.location } }} />
-    : <Component {...rest} />;
+  return hasUser ? (
+    <Navigate
+      to={{ pathname: AppRoute.LOGIN }}
+      state={{ from: rest.location }}
+    />
+  ) : (
+    <Component {...rest} />
+  );
 };
 
 PublicRoute.propTypes = {
